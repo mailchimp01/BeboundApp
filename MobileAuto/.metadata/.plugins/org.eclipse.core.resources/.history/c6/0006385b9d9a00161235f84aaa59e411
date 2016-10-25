@@ -23,7 +23,7 @@ public class ReportGenerator {
 		File target=new File(System.getProperty("user.dir")+"/Reports/"+var);
 		try{
 			copyFolder(source, target);
-			System.out.println("Generate report done!!!");
+			System.out.println("Generate report done");
 			System.out.println(reportDir);
 		}catch (Exception e) {
 			System.out.println(e.getMessage());

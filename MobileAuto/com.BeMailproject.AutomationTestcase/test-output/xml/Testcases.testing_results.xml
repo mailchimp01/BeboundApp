@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuite name="Test"
-           tests="3"
+           tests="4"
            failures="0"
            errors="0"
            skipped="0"
-           time="0.020">
+           time="0.023">
   <properties />
   
   
-            <testcase name="testingB" time="0.002" classname="Testcases.testing" />
-                <testcase name="testingC" time="0.004" classname="Testcases.testing" />
-                <testcase name="testingA" time="0.014" classname="Testcases.testing" />
+            <testcase name="testcaseb" time="0.003" classname="Testcases.testing" />
+                <testcase name="testcased" time="0.003" classname="Testcases.testing" />
+                <testcase name="testcasec" time="0.002" classname="Testcases.testing" />
+                <testcase name="testcase1" time="0.015" classname="Testcases.testing" />
       
 </testsuite>

@@ -19,12 +19,9 @@ public class ReportGenerator {
 		DateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
 		Date date=new Date();
 		String var=dateFormat.format(date);
-		String reportDir=System.getProperty("user.dir")+"/Reports/"+var;
 		File target=new File(System.getProperty("user.dir")+"/Reports/"+var);
 		try{
 			copyFolder(source, target);
-			System.out.println("Generate report done!!!");
-			System.out.println(reportDir);
 		}catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
