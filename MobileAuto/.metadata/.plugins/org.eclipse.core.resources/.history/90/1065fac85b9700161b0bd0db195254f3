@@ -1,0 +1,97 @@
+package Testcases;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.Dictionary;
+import java.util.Hashtable;
+
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+
+import AddingAccountAutomation.AddAccountAutomation;
+import CustomizedLibs.AccountInfo;
+import CustomizedLibs.MailSetUp;
+import CustomizedLibs.NetWorkUtility;
+import CustomizedLibs.RefreshApp;
+import CustomizedLibs.SetUpAndroidProfile;
+import Pages.ComposeScreen;
+import Pages.EmailDetailScreen;
+import Pages.HomeScreen;
+import Pages.InboxScreen;
+import Pages.SentScreen;
+import io.appium.java_client.android.AndroidDriver;
+
+public class TestSendEmailFlowFlow {
+	AndroidDriver driver;
+	SetUpAndroidProfile objProfile;
+	AccountInfo objAccount;
+	MailSetUp objMail;
+	HomeScreen objHome;
+	InboxScreen objInbox;
+	EmailDetailScreen objMailDetail;
+	ComposeScreen objCompose;
+	SentScreen objSent;
+	NetWorkUtility objNetwork;
+	EmailDetailScreen objEmailDetail;
+	RefreshApp objRefresh;
+	AddAccountAutomation objAddAccount;
+	String fileName=System.getProperty("user.dir")+"/src/main/resources/Data.xlsx";
+	Dictionary<String,String> dict = new Hashtable<String,String>();
+	
+	
+	@BeforeTest
+	public void setUp() throws IOException, InterruptedException{
+		System.out.println("--set up for env----");
+		objProfile= new SetUpAndroidProfile(fileName,"PhoneProfile");
+		objAccount = new AccountInfo(fileName,"Accounts");
+		objNetwork= new NetWorkUtility(fileName, "DataTransferMode");
+		
+		
+		DesiredCapabilities cap = objProfile.getDesizedCapability();
+		driver= new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"),cap);
+		objHome= new HomeScreen(driver);
+		objAddAccount= new AddAccountAutomation(driver);
+		// check and turn on the mode of network
+		TurnOnModeNetworkForTesting();
+		
+		// copy file attach to device 
+		CopyFileAttacheToDevice();
+		
+		// adding accounts automation
+		objAddAccount.addMailBoxAccount();
+	}
+	
+	@Test
+	public void testcase1()
+	{
+		System.out.println("test case 1 is running");
+	}
+	
+	
+	
+	public void TurnOnModeNetworkForTesting(){
+		// check the current network mode
+		String mode=objNetwork.getModeOfTransferData();
+		System.out.println("The current mode is  : "+mode);
+		
+		if(mode.equals("Wifi Connected")){
+			// turn on wifi
+			System.out.println("mode wifi is being turned on");
+			objNetwork.turnOnAllData(driver);
+		}
+		
+		if(mode.equals("Wifi and Data disable")){
+			System.out.println("Wifi and Data is being turned off");
+			// turn off data 
+			objNetwork.turnOffWifiAndData(driver);
+		}		
+	}
+	
+	public void CopyFileAttacheToDevice() throws IOException{
+		objMail= new MailSetUp();
+		objMail.CopyFileAttachedToDevcieForSendMail(fileName,"SendMail");
+	}
+	
+
+}

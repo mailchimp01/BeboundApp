@@ -1,0 +1,21 @@
+package Testcases;
+
+import org.testng.annotations.Test;
+
+public class testing {
+	
+	@Test
+	public void testingA(){
+		System.out.println("done");
+	}
+
+	@Test
+	public void testingB(){
+		System.out.println("done");
+	}
+	
+	@Test
+	public void testingC(){
+		System.out.println("done");
+	}
+}

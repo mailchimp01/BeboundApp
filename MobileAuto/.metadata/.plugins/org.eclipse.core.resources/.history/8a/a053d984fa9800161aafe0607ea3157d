@@ -1,0 +1,257 @@
+package Testcases;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.Dictionary;
+import java.util.Hashtable;
+
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.Assert;
+import org.testng.annotations.AfterGroups;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
+import AddingAccountAutomation.AddAccountAutomation;
+import CustomizedLibs.AccountInfo;
+import CustomizedLibs.MailSetUp;
+import CustomizedLibs.NetWorkUtility;
+import CustomizedLibs.RefreshApp;
+import CustomizedLibs.SetUpAndroidProfile;
+import Pages.ComposeScreen;
+import Pages.EmailDetailScreen;
+import Pages.HomeScreen;
+import Pages.InboxScreen;
+import Pages.SentScreen;
+import io.appium.java_client.android.AndroidDriver;
+
+public class TestSendEmailFullFlow {
+	AndroidDriver driver;
+	SetUpAndroidProfile objProfile;
+	AccountInfo objAccount;
+	MailSetUp objMail;
+	HomeScreen objHome;
+	InboxScreen objInbox;
+	EmailDetailScreen objMailDetail;
+	ComposeScreen objCompose;
+	SentScreen objSent;
+	NetWorkUtility objNetwork;
+	EmailDetailScreen objEmailDetail;
+	RefreshApp objRefresh;
+	AddAccountAutomation objAddAccount;
+	String fileName=System.getProperty("user.dir")+"/src/main/resources/Data.xlsx";
+	Dictionary<String,String> dict = new Hashtable<String,String>();
+	
+	
+	@BeforeTest
+	public void setUp() throws IOException, InterruptedException{
+		System.out.println("--set up for env----");
+		objProfile= new SetUpAndroidProfile(fileName,"PhoneProfile");
+		objAccount = new AccountInfo(fileName,"Accounts");
+		objNetwork= new NetWorkUtility(fileName, "DataTransferMode");
+		
+		
+		DesiredCapabilities cap = objProfile.getDesizedCapability();
+		driver= new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"),cap);
+		objHome= new HomeScreen(driver);
+		objAddAccount= new AddAccountAutomation(driver);
+		// check and turn on the mode of network
+		TurnOnModeNetworkForTesting();
+		
+		// copy file attach to device 
+		CopyFileAttacheToDevice();
+		
+		
+		// adding accounts automation
+		objAddAccount.addMailBoxAccount();
+		
+		
+		// get the name of account 1, cause we will do launch the screen of account 1 first (account 1 will send mail to account 2)
+		String account1=objAccount.getAccountName(1);
+		objHome.clickHomeButton();
+		objHome.switchMailAccount(account1);
+		
+		
+		// click inbox button 
+		objHome.clickCurrentAccount();
+		objInbox = new InboxScreen(driver);
+		objCompose= new ComposeScreen(driver);
+		
+	}
+	
+	@Test(priority=1, dataProvider="dataForSendMail",groups="sendMail")
+	public void sendMail(String To, String CC, String BCC, String Subject, String body, String isFileAttached, String fileName) throws InterruptedException{
+		System.out.println("====send mail beginning====");
+		System.out.println("To : "+To);
+		System.out.println("Subject : "+Subject);
+		
+		// click compose button to compose a mail
+		System.out.println("Click HOme button");
+		objInbox.clickComposeButton();
+		
+		//send email
+		System.out.println("compose and send mail....");
+		objCompose.sendMail(To, CC, BCC, Subject, body, isFileAttached, fileName);	
+		System.out.println("Send mail done");
+		
+		//wait until mail is sent
+		System.out.println("Wait until mail is sent");
+		objCompose.waitUntilMailIsSent();
+			
+	}
+	
+	
+
+	/**
+	 * This test case just switch to Screen of SentInbox and refresh the app only.	 * 
+	 */
+	@AfterGroups(groups="sendMail")
+	public void goBacktoHomeScreen() throws InterruptedException{
+		
+		System.out.println("Go to back Home Screen");
+		// go back to the Home Screen
+		objHome.clickHomeButton();
+		
+		// refresh all folders		
+		System.out.println("Refresh all folder");
+		objHome.refreshAllFolders();
+		
+		// go back to the Home Screen
+		System.out.println("click to home button");
+		objHome.clickHomeButton();
+		
+		// click Sent button to go to Sent Screen
+		System.out.println("go to sent screen");
+		objHome.goToSentFolder();
+		
+		
+	}
+	
+
+	/**
+	 * this function is used to check if an email exist or not
+	 * @param To
+	 * @param CC
+	 * @param Subject
+	 * @param body
+	 * @param isFileAttached
+	 * @param fileName
+	 * @throws InterruptedException 
+	 */
+	@Test(priority=2,dataProvider="dataForSendMail",groups="checkSendMailFromAccount1")
+	public void checkSendMailSuccessfully(String To, String CC,String BCC, String Subject, String body, String isFileAttached, String fileName) throws InterruptedException{
+		// Check if there is any web element with name (Subject) exists in the Sent folder.
+		
+		objSent= new SentScreen(driver);
+		
+		objSent.waitUntilMailDisplayed(Subject);
+		
+		System.out.println("=====================Checking if mail with subject : "+Subject+" send successfully===============");
+		Assert.assertTrue(objSent.checkIfEmailExist(Subject));
+		
+		// click on a email
+		System.out.println("Click on a mail to get the content of sent mail");
+		objSent.clickOnAnEmail(Subject);
+		
+		
+		// get the sent mail content and put it in to the dictionary for other check later
+		objMailDetail= new EmailDetailScreen(driver);
+		
+		System.out.println("Wait until mail is loaded done");
+		objMailDetail.waitUntilMailBodyIsFullyLoaded();				
+		
+		String mailcontent=objMailDetail.getBodyOfMail();
+		
+		
+		dict.put(Subject, mailcontent);
+		
+		System.out.println("Back to the Sent Screen");
+		objMailDetail.backToPreviuosScreen();		
+				
+	}
+	
+	@AfterGroups(groups="checkSendMailFromAccount1")
+	public void switchToAccount2ForcheckingMailReceive() throws InterruptedException{
+		// back to home screen
+		System.out.println("Go to Home Screen");
+		objSent.backToHomeScreen();
+		
+		// get the name of account2
+		String account2=objAccount.getAccountName(2);
+		
+		// switch to home screen of account2
+		System.out.println("Switch to account 2");
+		objHome.switchMailAccount(account2);
+		
+		// sleep 5 minutes for the app syncing to server to get new mail.
+		System.out.println("Wait 5 min ");
+		Thread.sleep(7*60*1000);
+		
+		// go to inbox of the account
+		System.out.println("Go to inbox screen");
+		objHome.gotoInboxScreen();
+		
+		// refresh screen
+		RefreshApp obj= new RefreshApp();
+		obj.RefreshScreen(driver);
+		
+	}
+	
+	@Test(priority=3,dataProvider="dataForSendMail",groups="checkReceiveEmailSuccessfully")
+	public void TestAccountBReceiveMailSuccessfullyWithCorrectContent(String To, String CC,String BCC, String Subject, String body, String isFileAttached, String fileName){
+		System.out.println("==================Check mail "+Subject+" exist in mailbox B with correct content==============");
+		objInbox= new InboxScreen(driver);
+		objInbox.waitUntilMailIsDisplayed(Subject);
+		Assert.assertTrue(objInbox.checkIfEmailExist(Subject));	
+		//click on emal
+		objInbox.clickOnAnEmail(Subject);
+		//check content of email
+		String sentMessage=dict.get(Subject).toString();
+		// wait until  for the screen loading the content of email done.
+		objMailDetail.waitUntilMailBodyIsFullyLoaded();
+		// check if they are the same content.
+		System.out.println(objMailDetail.checkContentOfEmailIsSame(sentMessage));
+		Assert.assertTrue(objMailDetail.checkContentOfEmailIsSame(sentMessage));
+		// back to the Inbox 
+		objMailDetail.backToPreviuosScreen();
+		
+	}
+	
+	
+	/**
+	 * this function is used for getting data for testing.
+	 * it will return a set of data for our testing
+	 * we call data driven testing
+	 * @return
+	 * @throws IOException
+	 */
+	@DataProvider(name="dataForSendMail")
+	public Object[][] DataTest() throws IOException{
+		return objMail.getDataForSendMail(fileName,"SendMail");	
+	}
+	
+	public void TurnOnModeNetworkForTesting(){
+		// check the current network mode
+		String mode=objNetwork.getModeOfTransferData();
+		System.out.println("The current mode is  : "+mode);
+		
+		if(mode.equals("Wifi Connected")){
+			// turn on wifi
+			System.out.println("mode wifi is being turned on");
+			objNetwork.turnOnAllData(driver);
+		}
+		
+		if(mode.equals("Wifi and Data disable")){
+			System.out.println("Wifi and Data is being turned off");
+			// turn off data 
+			objNetwork.turnOffWifiAndData(driver);
+		}		
+	}
+	
+	public void CopyFileAttacheToDevice() throws IOException{
+		objMail= new MailSetUp();
+		objMail.CopyFileAttachedToDevcieForSendMail(fileName,"SendMail");
+	}
+	
+
+}

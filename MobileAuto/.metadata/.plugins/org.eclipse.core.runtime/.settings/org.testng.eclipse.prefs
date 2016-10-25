@@ -1,0 +1,5 @@
+com.BeMailproject.AutomationTestcase.disabledListeners=true
+com.BeMailproject.AutomationTestcase.outdir=/test-output
+com.tutorial.testNG.customerReport.disabledListeners=true
+com.tutorial.testNG.customerReport.outdir=/test-output
+eclipse.preferences.version=1

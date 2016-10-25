@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite guice-stage="DEVELOPMENT" name="Failed suite [Suite]">
+  <test name="Test">
+    <classes>
+      <class name="Testcases.TestSendMail"/>
+      <class name="Testcases.TestForwardMail"/>
+    </classes>
+  </test> <!-- Test -->
+  <test name="Test(failed)">
+    <classes>
+      <class name="Testcases.TestForwardMail">
+        <methods>
+          <include name="setUp"/>
+          <include name="checkAccount2ForwardMailSuccessfully"/>
+          <include name="account01sendMailToAccount02"/>
+          <include name="account2ForwardMailToAccount3"/>
+          <include name="testAccount3ReceiveCorrectForwardEmail"/>
+        </methods>
+      </class> <!-- Testcases.TestForwardMail -->
+      <class name="Testcases.TestSendMail">
+        <methods>
+          <include name="checkSendMailSuccessfully"/>
+          <include name="sendMail"/>
+          <include name="setUp"/>
+          <include name="TestAccountBReceiveMailSuccessfullyWithCorrectContent"/>
+        </methods>
+      </class> <!-- Testcases.TestSendMail -->
+    </classes>
+  </test> <!-- Test(failed) -->
+</suite> <!-- Failed suite [Suite] -->

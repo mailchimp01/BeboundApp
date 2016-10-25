@@ -1,0 +1,14 @@
+package CustomizedLibs;
+
+import org.openqa.selenium.WebDriver;
+
+public class SwitchApp {
+	WebDriver driver;
+	public SwitchApp(WebDriver driver){
+		this.driver=driver;
+	}
+	public void switchToWebView(WebDriver driver){
+		
+	}
+
+}

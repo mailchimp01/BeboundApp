@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;Testcases.TestSendEmailFlowFlow&apos; to &apos;TestSendEmailFullFlow&apos;&#x0D;&#x0A;- Original project: &apos;com.BeMailproject.AutomationTestcase&apos;&#x0D;&#x0A;- Original element: &apos;Testcases.TestSendEmailFlowFlow&apos;&#x0D;&#x0A;- Renamed element: &apos;Testcases.TestSendEmailFullFlow&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;TestSendEmailFlowFlow&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src\/test\/java&lt;Testcases{TestSendEmailFlowFlow.java[TestSendEmailFlowFlow" matchStrategy="1" name="TestSendEmailFullFlow" qualified="false" references="true" similarDeclarations="false" stamp="1477035335264" textual="false" version="1.0"/>
+</session>

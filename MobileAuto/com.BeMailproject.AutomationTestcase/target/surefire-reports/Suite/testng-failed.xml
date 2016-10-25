@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite guice-stage="DEVELOPMENT" verbose="0" name="Failed suite [Suite]">
+  <test name="Test">
+    <classes>
+      <class name="Testcases.TestSendMail"/>
+    </classes>
+  </test> <!-- Test -->
+  <test name="Test(failed)">
+    <classes>
+      <class name="Testcases.TestSendMail">
+        <methods>
+          <include name="checkSendMailSuccessfully" invocation-numbers="0 1 2 3 4 5"/>
+          <include name="sendMail" invocation-numbers="5"/>
+          <include name="setUp"/>
+          <include name="GobacktoHomeScreen"/>
+          <include name="tearDown"/>
+          <include name="TestAccountBReceiveMailSuccessfully" invocation-numbers="0 1 2 3"/>
+          <include name="TestAccountBReceiveCorrectContentOfEmail" invocation-numbers="0 1 2 3"/>
+          <include name="switchToAccount2ForcheckingMailReceive"/>
+        </methods>
+      </class> <!-- Testcases.TestSendMail -->
+    </classes>
+  </test> <!-- Test(failed) -->
+</suite> <!-- Failed suite [Suite] -->

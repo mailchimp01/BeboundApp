@@ -1,0 +1,48 @@
+package AddingAccountAutomation;
+
+import java.io.IOException;
+
+import org.openqa.selenium.WebDriver;
+
+import AccountAdding.MainHomeAddingAccount;
+import CustomizedLibs.AccountInfo;
+import io.appium.java_client.android.AndroidDriver;
+
+public class AddAccountAutomation {
+	
+	WebDriver driver;
+	AccountInfo objAccount;
+	MainHomeAddingAccount objMainHomeAddingAccount;
+	String fileName=System.getProperty("user.dir")+"/src/main/resources/Data.xlsx";
+	
+	public AddAccountAutomation(WebDriver driver){
+		this.driver=driver;
+	}
+	
+	public void addMailBoxAccount() throws IOException{
+		objAccount = new AccountInfo(fileName, "Accounts");
+		objMainHomeAddingAccount= new MainHomeAddingAccount(driver);
+		for(int i=1;i<=3;i++){
+			// check the email type 
+			String emailType=objAccount.getTypeOfEmail(i);
+			if(emailType.equals("Gmail")){
+				objMainHomeAddingAccount.selectGmailAccount();
+			}
+			else if(emailType.equals("Exchange")){
+				objMainHomeAddingAccount.selectExchangeAccount();
+			}
+			else if(emailType.equals("Yahoo")){
+				objMainHomeAddingAccount.selectYahooAccount();
+			}
+			else if(emailType.equals("Outlook")){
+				objMainHomeAddingAccount.selectOutlookAccount();
+			}
+			else{
+				objMainHomeAddingAccount.selectOtherAccount();
+			}
+		}
+	}
+	
+	
+
+}

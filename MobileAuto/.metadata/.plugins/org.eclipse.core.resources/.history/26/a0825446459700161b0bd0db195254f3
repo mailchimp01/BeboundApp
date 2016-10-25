@@ -1,0 +1,32 @@
+package CustomizedLibs;
+
+import java.util.Set;
+
+import org.openqa.selenium.WebDriver;
+
+import io.appium.java_client.android.AndroidDriver;
+
+public class SwitchApp {
+	
+	public void switchToWebView(WebDriver driver){		
+		Set<String> contexts=driver.getContextHandles();
+		for(String s:contexts){
+			if(s.contains("WEBVIEW")){
+				driver.context(s);
+				System.out.println("Switch to Webview");
+			}
+		}
+	}
+	
+	public void switchToNativeApp(WebDriver driver){
+		Set<String> contexts=driver.getContextHandles();
+		for(String s:contexts){
+			if(s.contains("NATIVE")){
+				driver.context(s);
+				System.out.println("Switch to Native");
+			}
+		}
+
+	}
+
+}

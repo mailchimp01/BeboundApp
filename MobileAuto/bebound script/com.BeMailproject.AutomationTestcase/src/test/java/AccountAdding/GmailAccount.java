@@ -1,0 +1,95 @@
+
+package AccountAdding;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+public class GmailAccount {
+	WebDriver driver;
+	WebDriverWait wait;
+	
+	@FindBy(id="Email")
+	WebElement txtEmail;
+	
+	@FindBy(id="next")
+	WebElement btnNext;
+	
+	@FindBy(id="Passwd")
+	WebElement txtPassword;
+	
+	@FindBy(id="signIn")
+	WebElement btnSignIn;
+	
+	
+	@FindBy(id="submit_approve_access")
+	WebElement btnOKAccess;
+	
+	@FindBy(id="submit_deny_access")
+	WebElement btnDenyAccess;
+	
+	@FindBy(id="com.bebound.mail:id/bt_next")
+	WebElement btnNexttoMailbox;
+	
+	@FindBy(id="com.android.packageinstaller:id/permission_allow_button")
+	WebElement btnAllowAccessContact;
+	
+	@FindBy(id="com.android.packageinstaller:id/permission_allow_button")
+	WebElement btnAllowAccessPhotoMedia;
+	
+		
+	public GmailAccount(WebDriver driver){
+		this.driver=driver;
+		wait=new WebDriverWait(driver, 120);
+		PageFactory.initElements(driver, this);
+	}
+	
+	/**
+	 * this function is used for inputting username (email) when login to gmail
+	 * @param pemail the email / user name of gmail account
+	 */
+	private void setEmail(String pemail){
+		txtEmail.sendKeys(pemail);
+	}
+	
+	/**
+	 * this function is used for inputting password of gmail account login
+	 * @param ppassword password to login 
+	 */
+	private void setPassword(String ppassword){
+		wait.until(ExpectedConditions.visibilityOf(txtPassword));
+		txtPassword.sendKeys(ppassword);
+	}
+	
+	private void clickOKButtonToAccessMAilBox(){
+		wait.until(ExpectedConditions.visibilityOf(btnOKAccess));
+		wait.until(ExpectedConditions.elementToBeClickable(btnOKAccess));
+		btnOKAccess.click();
+	}
+	
+	
+	/**
+	 * this function is used for inputting username and password of gmail account
+	 * @param email email of login account gmail
+	 * @param password password of login account gmail
+	 * @throws InterruptedException
+	 */
+	public void loginGmail(String email,String password) throws InterruptedException{	
+		setEmail(email);
+		btnNext.click();
+		setPassword(password);
+		btnSignIn.click();
+		clickOKButtonToAccessMAilBox();		
+	}
+	
+	
+	public void goToMailBox() throws InterruptedException{
+		wait.until(ExpectedConditions.visibilityOf(btnNexttoMailbox));		
+		btnNexttoMailbox.click();
+	}
+	
+	
+}

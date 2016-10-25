@@ -1,0 +1,181 @@
+package Pages;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class HomeScreen {
+WebDriver driver;
+	
+	// label account header email
+	@FindBy(id="com.bebound.mail:id/material_drawer_account_header_email")
+	WebElement AccountHeaderName;
+	
+	// label account header small first
+	@FindBy(id="com.bebound.mail:id/material_drawer_account_header_small_first")
+	WebElement accHeaderSmallFirst;
+	
+	// label account header small second
+	@FindBy(id="com.bebound.mail:id/material_drawer_account_header_small_second")
+	WebElement accHeaderSmallSecond;
+	
+	// button Home
+	@FindBy(className="android.widget.ImageButton")
+	WebElement btnHome;
+	
+	
+	//button Inbox
+	@FindBy(name="Inbox")
+	WebElement btnInbox;
+	
+	
+	
+	// button Sent
+	@FindBy(name="Sent")
+	WebElement btnSent;
+	
+	
+	// button Sent from this device
+	@FindBy(name="Sent from this device")
+	WebElement btnSentFromThisDevice;
+	
+	
+	// button refresh Folders
+	@FindBy(id="com.bebound.mail:id/material_drawer_icon")
+	WebElement btnFoldes;
+	
+	// button Setting 
+	@FindBy(name="Settings")
+	WebElement btnSetting;
+		
+	
+	
+	public HomeScreen(WebDriver driver){
+		this.driver=driver;
+		PageFactory.initElements(driver, this);
+	}
+	
+	/**
+	 * this function is used for click Home button 
+	 */
+	public void clickHomeButton(){
+		btnHome.click();
+	}
+	
+	
+	/**
+	 * this function is used for click Inbox button
+	 */
+	public void clickInboxButton(){
+		btnInbox.click();
+	}
+	
+	/**
+	 * this function is used for click send button
+	 */
+	public void goToSentFolder(){
+		if(!driver.findElements(By.name("Sent")).isEmpty()){
+			btnSent.click();
+		}
+		if(!driver.findElements(By.name("Sent from this device")).isEmpty()){
+			btnSentFromThisDevice.click();
+		}
+		
+	}
+	
+	/**
+	 * this funciton is used for click button Send from this device (Sent)
+	 */
+	public void clickSentFromThisDevice(){
+		btnSentFromThisDevice.click();
+	}
+		
+	
+	/**
+	 * this function is used for click on the account header small first icon
+	 */
+	public void clickAccountHeaderSmallFirst(){
+		accHeaderSmallFirst.click();
+	}
+	
+	
+	/**
+	 * this function is used for click on the account header small second icon
+	 */
+	public void clickAccountHeaderSmallSecond(){
+		accHeaderSmallSecond.click();
+	}
+	
+	
+	/**
+	 * this function is used for get the name of current user
+	 * @return
+	 */
+	public String getAccountHeaderEmailName(){
+		return AccountHeaderName.getText();
+	}
+	
+	
+	
+	/**
+	 * this function is used for click inbox button 
+	 */
+	public void gotoInboxScreen(){
+		clickInboxButton();
+	}
+	
+	
+	/**
+	 * this function is used for click Folders button for syncing
+	 */
+	public void clickFoldersButton(){
+		btnFoldes.click();
+	}
+	
+	
+	/**
+	 * this function is used for switch to the Home of the Account which you want to work.
+	 * @param accountName : the account which we want to use for sending, checking mail....
+	 */
+	public void switchMailAccount(String accountName){
+		
+		if(!getAccountHeaderEmailName().equals(accountName)){
+			for(int i=0;i<3;i++){
+				clickAccountHeaderSmallFirst();
+				clickHomeButton();
+				if(getAccountHeaderEmailName().equals(accountName))
+				{
+					break;
+				}
+				clickAccountHeaderSmallSecond();
+				clickHomeButton();
+				if(getAccountHeaderEmailName().equals(accountName))
+				{
+					break;
+				}
+			}
+		}
+	}
+	
+	
+	
+	/**
+	 * this function is uesd for refresh all folders
+	 */
+	public void refreshAllFolders(){
+		clickFoldersButton();
+	}
+	
+	public void clickSettingButton(){
+		btnSetting.click();
+	}
+	
+	
+	
+	
+	
+	
+		
+	
+}

@@ -1,0 +1,13 @@
+CustomizedLibs\AccountInfo.class
+CustomizedLibs\MailSetUp.class
+CustomizedLibs\NetWorkUtility.class
+Pages\ComposeScreen.class
+CustomizedLibs\ShellExecuter.class
+Pages\SentScreen.class
+CustomizedLibs\SetUpAndroidProfile.class
+Testcases\TestSendMail.class
+CustomizedLibs\ExcelUtility.class
+Pages\HomeScreen.class
+Pages\InboxScreen.class
+Testcases\testing.class
+Pages\EmailDetailScreen.class
